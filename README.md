@@ -30,9 +30,49 @@ If successful, the API will return a JSON response that includes the following i
 - SKU (SKU)
 - Current weather information in the recipient shipment location (weather_information)
 ### Example request:
- 
+```
+ {
+  "tracking_number": "TN12345678",
+  "carrier": "DHL"
+ }
+```
 ### Example response:
- 
+```
+ {
+  "limit": 10,
+  "offset": 0,
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "tracking_number": "TN12345678",
+      "carrier": "DHL",
+      "status": "in-transit",
+      "sender_address": "Street 1, 10115 Berlin, Germany",
+      "receiver_address": "Street 10, 75001 Paris,France",
+      "articles": [
+        {
+          "SKU": "LP123",
+          "name": "Laptop",
+          "price": 800,
+          "quantity": 1
+        },
+        {
+          "SKU": "MO456",
+          "name": "Mouse",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "weather": {
+        "temperature": 283.7,
+        "wind_speed": 5.14
+      }
+    }
+  ]
+}
+```
 
 ## Note:
 To retrieve weather information, it uses a free third-party weather API. Therefore, there may be limitations on the number of API requests.
