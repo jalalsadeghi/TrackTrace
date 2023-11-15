@@ -8,7 +8,7 @@ from tracktrace.traceapi.models import Shipments
 
 def update_weather_data(receiver_city, receiver_country, receiver_zipcode):
     url = "https://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={api_key}".format(
-        city=receiver_city, country=receiver_country, api_key="1bb89c545856fe426c0b80071d7a2b9c"
+        city=receiver_city, country=receiver_country, api_key=<your api_key>
     )
     response = requests.get(url)
     if response.status_code == 200:
