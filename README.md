@@ -11,7 +11,7 @@ A CSV file (below) containing sample shipment and article data is provided for s
 - Display current weather information in the recipient shipment location
 
 ## Architecture
-- This API is implemented using the Django framework and based on the [Django-Styleguide](https://github.com/jalalsadeghi/django_style_guide) structure
+- This API is implemented using the Django framework and based on the [Django-Styleguide](https://github.com/HackSoftware/Django-Styleguide) structure
 - PostgreSQL database
 - Using the [OpenWeatherMap](https://openweathermap.org/api) API 
 
@@ -110,7 +110,7 @@ source venv/bin/activate
 pip install -r requirements_dev.txt
 ```
 
-3- create your env
+3- create your env (add your weather api_key in .env)
 ```
 cp .env.example .env
 ```
