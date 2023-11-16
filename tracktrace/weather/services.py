@@ -2,13 +2,15 @@ import requests
 from datetime import timedelta
 from django.utils import timezone
 
+from config.env import env
+
 from tracktrace.weather.models import Weather
 from tracktrace.traceapi.models import Shipments
 
 
 def update_weather_data(receiver_city, receiver_country, receiver_zipcode):
     url = "https://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={api_key}".format(
-        city=receiver_city, country=receiver_country, api_key=<your api_key>
+        city=receiver_city, country=receiver_country, api_key=env('WEATHER_API_KYE')
     )
     response = requests.get(url)
     if response.status_code == 200:
@@ -52,7 +54,7 @@ def get_weather():
             lastupdated = weather.updated_at
             timedifference = current_time - lastupdated
 
-            update_city_if = timedifference > timedelta(minutes=1)
+            update_city_if = timedifference > timedelta(hours=2)
 
         if update_city_if:
             update_weather_data(receiver_city, receiver_country, receiver_zipcode)

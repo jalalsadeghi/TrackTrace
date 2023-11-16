@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 'name': 'Periodic task description',
                 'cron': {
                     'minute': '*',
-                    'hour': '*',
+                    'hour': '*/2',
                     'day_of_week': '*',
                     'day_of_month': '*',
                     'month_of_year': '*',
