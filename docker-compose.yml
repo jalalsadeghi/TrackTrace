@@ -50,3 +50,13 @@ services:
     <<: *base-service
     container_name: beats
     command: ./docker/beats_entrypoint.sh
+
+  nginx:
+    build:
+      context: ./docker/nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    restart: always
