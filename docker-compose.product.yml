@@ -5,58 +5,48 @@ x-base-service: &base-service
     context: .
     dockerfile: docker/production.Dockerfile
   environment:
-    - DATABASE_URL=psql://tta:tta123@db:5432/tracktraceapi
-    - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    - DATABASE_URL=psql://tta:tta123@db-product:5432/tracktraceapi
+    - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq-product:5672//
   volumes:
     - .:/app
   depends_on:
-    - db
-    - rabbitmq
+    - db-product
+    - rabbitmq-product
   restart: on-failure
 
 services:
-  db:
+  db-product:
     image: postgres:14.1
-    container_name: postgres
+    container_name: db-product
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       - POSTGRES_DB=tracktraceapi
       - POSTGRES_USER=tta
       - POSTGRES_PASSWORD=tta123
 
-  rabbitmq:
-    image: "rabbitmq:alpine"
-    container_name: rabbitmq
+  rabbitmq-product:
+    image: rabbitmq:alpine
+    container_name: rabbitmq-product
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
       timeout: 30s
       retries: 3
 
-  django:
+  django-product:
     <<: *base-service
-    container_name: django
+    container_name: django-product
     command: ./docker/web_entrypoint.sh
     ports:
-      - "8000:8000"
+      - "8001:8000"
 
-  celery:
+  celery-product:
     <<: *base-service
-    container_name: worker
+    container_name: worker-product
     command: ./docker/celery_entrypoint.sh
 
-  beats:
+  beats-product:
     <<: *base-service
-    container_name: beats
+    container_name: beats-product
     command: ./docker/beats_entrypoint.sh
-
-  nginx:
-    build:
-      context: ./docker/nginx
-    container_name: nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - django
-    restart: always

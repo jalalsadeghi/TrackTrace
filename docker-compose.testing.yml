@@ -1,0 +1,52 @@
+version: "3.9"
+
+x-base-service: &base-service
+  build:
+    context: .
+    dockerfile: docker/production.Dockerfile
+  environment:
+    - DATABASE_URL=psql://tta:tta123@db-testing:5432/tracktraceapi
+    - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq-testing:5672//
+  volumes:
+    - .:/app
+  depends_on:
+    - db-testing
+    - rabbitmq-testing
+  restart: on-failure
+
+services:
+  db-testing:
+    image: postgres:14.1
+    container_name: db-testing
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_DB=tracktraceapi
+      - POSTGRES_USER=tta
+      - POSTGRES_PASSWORD=tta123
+
+  rabbitmq-testing:
+    image: rabbitmq:alpine
+    container_name: rabbitmq-testing
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  django-testing:
+    <<: *base-service
+    container_name: django-testing
+    command: ./docker/web_entrypoint.sh
+    ports:
+      - "8002:8000"
+
+  celery-testing:
+    <<: *base-service
+    container_name: worker-testing
+    command: ./docker/celery_entrypoint.sh
+
+  beats-testing:
+    <<: *base-service
+    container_name: beats-testing
+    command: ./docker/beats_entrypoint.sh

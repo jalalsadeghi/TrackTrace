@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  nginx:
+    build:
+      context: ./docker/nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django-product
+      - django-testing
+      - django-production
+    restart: always
