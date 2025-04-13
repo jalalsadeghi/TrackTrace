@@ -6,7 +6,7 @@ pipeline {
         SSH_CREDENTIALS_ID = 'jenkins-ssh-key'
         PROJECT_SERVER_IP = '46.101.147.132'
         PROJECT_SERVER_USER = 'root'
-        PROJECT_PATH = '/root/Projects/TrackTrace'
+        PROJECT_PATH = '/root/Projects'
     }
 
     stages {
@@ -22,7 +22,7 @@ pipeline {
                     sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${PROJECT_SERVER_USER}@${PROJECT_SERVER_IP} '
-                            cd ${PROJECT_PATH}/${BRANCH_NAME} &&
+                            cd ${PROJECT_PATH}/${BRANCH_NAME}/TrackTrace &&
                             git checkout ${BRANCH_NAME} &&
                             git pull origin ${BRANCH_NAME} &&
                             chmod +x docker/*.sh &&
