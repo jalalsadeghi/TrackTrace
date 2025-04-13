@@ -12,46 +12,46 @@ pipeline {
             }
         }
 
-        stage('Deploy to Product (develop)') {
+        stage('Deploy Product (develop)') {
             when { branch 'develop' }
             steps {
                 script {
-                    echo "🔵 Deploying to Product environment"
+                    echo "🔵 Deploying Product environment (product.min-wave.com)"
                     sh '''
                     chmod +x docker/*.sh
-                    docker-compose -f docker-compose.product.yml down
-                    docker-compose -f docker-compose.product.yml build
-                    docker-compose -f docker-compose.product.yml up -d
+                    docker-compose -f docker-compose.product.yaml down
+                    docker-compose -f docker-compose.product.yaml build
+                    docker-compose -f docker-compose.product.yaml up -d
                     '''
                 }
             }
         }
 
-        stage('Deploy to Testing (staging)') {
+        stage('Deploy Testing (staging)') {
             when { branch 'staging' }
             steps {
                 script {
-                    echo "🟡 Deploying to Testing environment"
+                    echo "🟡 Deploying Testing environment (testing.min-wave.com)"
                     sh '''
                     chmod +x docker/*.sh
-                    docker-compose -f docker-compose.testing.yml down
-                    docker-compose -f docker-compose.testing.yml build
-                    docker-compose -f docker-compose.testing.yml up -d
+                    docker-compose -f docker-compose.testing.yaml down
+                    docker-compose -f docker-compose.testing.yaml build
+                    docker-compose -f docker-compose.testing.yaml up -d
                     '''
                 }
             }
         }
 
-        stage('Deploy to Production (main)') {
+        stage('Deploy Production (main)') {
             when { branch 'main' }
             steps {
                 script {
-                    echo "🟢 Deploying to Production environment"
+                    echo "🟢 Deploying Production environment (production.min-wave.com)"
                     sh '''
                     chmod +x docker/*.sh
-                    docker-compose -f docker-compose.production.yml down
-                    docker-compose -f docker-compose.production.yml build
-                    docker-compose -f docker-compose.production.yml up -d
+                    docker-compose -f docker-compose.production.yaml down
+                    docker-compose -f docker-compose.production.yaml build
+                    docker-compose -f docker-compose.production.yaml up -d
                     '''
                 }
             }
