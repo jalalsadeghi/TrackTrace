@@ -22,7 +22,7 @@ pipeline {
                     sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${PROJECT_SERVER_USER}@${PROJECT_SERVER_IP} '
-                            cd ${PROJECT_PATH} &&
+                            cd ${PROJECT_PATH}/${BRANCH_NAME} &&
                             git checkout ${BRANCH_NAME} &&
                             git pull origin ${BRANCH_NAME} &&
                             chmod +x docker/*.sh &&
