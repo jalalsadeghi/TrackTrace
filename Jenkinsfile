@@ -6,7 +6,7 @@ pipeline {
         SSH_CREDENTIALS_ID = 'jenkins-ssh-key'
         PROJECT_SERVER_IP = '46.101.147.132'
         PROJECT_SERVER_USER = 'root'
-        PROJECT_PATH = '~/Projects/TrackTrace'
+        PROJECT_PATH = '/root/Projects/TrackTrace'
     }
 
     stages {
