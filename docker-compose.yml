@@ -1,5 +1,19 @@
 version: "3.9"
 
+x-base-service: &base-service
+  build:
+    context: .
+    dockerfile: docker/production.Dockerfile
+  environment:
+    - DATABASE_URL=psql://tta:tta123@db:5432/tracktraceapi
+    - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+  volumes:
+    - .:/app
+  depends_on:
+    - db
+    - rabbitmq
+  restart: on-failure
+
 services:
   db:
     image: postgres:14.1
@@ -21,53 +35,18 @@ services:
       retries: 3
 
   django:
-    build:
-      context: .
-      dockerfile: docker/production.Dockerfile
+    <<: *base-service
     container_name: django
     command: ./docker/web_entrypoint.sh
-    environment:
-      - DATABASE_URL=psql://tta:tta123@db:5432/tracktraceapi
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-    volumes:
-      - .:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-      - rabbitmq
-    restart: on-failure
 
   celery:
-    build:
-      context: .
-      dockerfile: docker/production.Dockerfile
-    # command: celery -A tracktrace.tasks worker -l info --without-gossip --without-mingle --without-heartbeat
+    <<: *base-service
     container_name: worker
     command: ./docker/celery_entrypoint.sh
-    environment:
-      - DATABASE_URL=psql://tta:tta123@db:5432/tracktraceapi
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - rabbitmq
-    restart: on-failure
 
   beats:
-    build:
-      context: .
-      dockerfile: docker/production.Dockerfile
-    # command: celery -A tracktrace.tasks beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    <<: *base-service
     container_name: beats
     command: ./docker/beats_entrypoint.sh
-    environment:
-      - DATABASE_URL=psql://tta:tta123@db:5432/tracktraceapi
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - rabbitmq
-    restart: on-failure
