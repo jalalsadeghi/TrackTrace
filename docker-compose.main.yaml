@@ -5,48 +5,48 @@ x-base-service: &base-service
     context: .
     dockerfile: docker/production.Dockerfile
   environment:
-    - DATABASE_URL=psql://tta:tta123@db-testing:5432/tracktraceapi
-    - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq-testing:5672//
+    - DATABASE_URL=psql://tta:tta123@db-production:5432/tracktraceapi
+    - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq-production:5672//
   volumes:
     - .:/app
   depends_on:
-    - db-testing
-    - rabbitmq-testing
+    - db-production
+    - rabbitmq-production
   restart: on-failure
 
 services:
-  db-testing:
+  db-production:
     image: postgres:14.1
-    container_name: db-testing
+    container_name: db-production
     ports:
-      - 5434:5432
+      - 5435:5432
     environment:
       - POSTGRES_DB=tracktraceapi
       - POSTGRES_USER=tta
       - POSTGRES_PASSWORD=tta123
 
-  rabbitmq-testing:
+  rabbitmq-production:
     image: rabbitmq:alpine
-    container_name: rabbitmq-testing
+    container_name: rabbitmq-production
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
       timeout: 30s
       retries: 3
 
-  django-testing:
+  django-production:
     <<: *base-service
-    container_name: django-testing
+    container_name: django-production
     command: ./docker/web_entrypoint.sh
     ports:
-      - "8002:8000"
+      - "8003:8000"
 
-  celery-testing:
+  celery-production:
     <<: *base-service
-    container_name: worker-testing
+    container_name: worker-production
     command: ./docker/celery_entrypoint.sh
 
-  beats-testing:
+  beats-production:
     <<: *base-service
-    container_name: beats-testing
+    container_name: beats-production
     command: ./docker/beats_entrypoint.sh
