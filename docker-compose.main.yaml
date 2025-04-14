@@ -50,3 +50,4 @@ services:
     <<: *base-service
     container_name: beats-production
     command: ./docker/beats_entrypoint.sh
+    
